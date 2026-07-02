@@ -26,6 +26,8 @@ export function authRoutes(
   const rateLimitForgotPassword = createAuthRateLimiter(redis, 'forgot-password');
   const rateLimitRefresh = createAuthRateLimiter(redis, 'refresh');
   const rateLimitResendVerification = createAuthRateLimiter(redis, 'resend-verification');
+  const rateLimitResetPassword = createAuthRateLimiter(redis, 'reset-password');
+  const rateLimitVerifyEmail = createAuthRateLimiter(redis, 'verify-email');
 
   app.post('/register', {
     preHandler: [rateLimitRegister, validateRequest(registerSchema, 'body')],
@@ -84,7 +86,7 @@ export function authRoutes(
   });
 
   app.post('/reset-password', {
-    preHandler: validateRequest(resetPasswordSchema, 'body'),
+    preHandler: [rateLimitResetPassword, validateRequest(resetPasswordSchema, 'body')],
     schema: {
       tags: ['Auth'],
       summary: 'Reset password with token',
@@ -103,7 +105,7 @@ export function authRoutes(
   });
 
   app.post('/verify-email', {
-    preHandler: validateRequest(verifyEmailSchema, 'body'),
+    preHandler: [rateLimitVerifyEmail, validateRequest(verifyEmailSchema, 'body')],
     schema: {
       tags: ['Auth'],
       summary: 'Verify email address',

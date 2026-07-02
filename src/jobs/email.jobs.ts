@@ -1,8 +1,8 @@
-import type { QueueService } from '../queue/queue.service.js';
+import type { IQueueService } from '../interfaces/index.js';
 import type { EmailJobData } from '../types/index.js';
 
 export async function enqueueWelcomeEmail(
-  queueService: QueueService,
+  queueService: IQueueService,
   email: string,
   firstName: string,
 ): Promise<string> {
@@ -18,7 +18,7 @@ export async function enqueueWelcomeEmail(
 }
 
 export async function enqueuePasswordResetEmail(
-  queueService: QueueService,
+  queueService: IQueueService,
   email: string,
   resetToken: string,
 ): Promise<string> {
@@ -34,7 +34,7 @@ export async function enqueuePasswordResetEmail(
 }
 
 export async function enqueueEmailVerification(
-  queueService: QueueService,
+  queueService: IQueueService,
   email: string,
   verificationToken: string,
 ): Promise<string> {

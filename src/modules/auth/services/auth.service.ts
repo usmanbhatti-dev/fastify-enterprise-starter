@@ -1,6 +1,6 @@
 import type { HashService } from '../../../common/services/hash.service.js';
 import type { TokenService } from '../../../common/services/token.service.js';
-import type { QueueService } from '../../../queue/queue.service.js';
+import type { IQueueService } from '../../../interfaces/index.js';
 import { UserRepository } from '../../users/repositories/user.repository.js';
 import { RoleRepository } from '../../roles/repositories/role.repository.js';
 import { SessionRepository } from '../repositories/session.repository.js';
@@ -42,7 +42,7 @@ export class AuthService {
     private readonly emailVerificationRepository: EmailVerificationRepository,
     private readonly hashService: HashService,
     private readonly tokenService: TokenService,
-    private readonly queueService: QueueService,
+    private readonly queueService: IQueueService,
   ) {}
 
   async register(input: RegisterInput): Promise<{ user: Record<string, unknown> }> {

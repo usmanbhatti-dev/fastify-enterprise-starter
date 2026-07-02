@@ -4,12 +4,18 @@ import { RateLimitError } from '../exceptions/index.js';
 import { authRateLimitConfig } from '../config/index.js';
 
 export type AuthRateLimitAction =
-  'login' | 'register' | 'forgot-password' | 'refresh' | 'resend-verification';
+  | 'login'
+  | 'register'
+  | 'forgot-password'
+  | 'refresh'
+  | 'resend-verification'
+  | 'reset-password'
+  | 'verify-email';
 
 function buildRateLimitKey(action: AuthRateLimitAction, request: FastifyRequest): string {
-  const body = request.body as { email?: string } | undefined;
-  const email = body?.email?.toLowerCase() ?? 'unknown';
-  return `auth:${action}:${email}:${request.ip}`;
+  const body = request.body as { email?: string; token?: string } | undefined;
+  const identifier = body?.email?.toLowerCase() ?? (body?.token ? 'token' : 'unknown');
+  return `auth:${action}:${identifier}:${request.ip}`;
 }
 
 export function createAuthRateLimiter(redis: Redis, action: AuthRateLimitAction) {

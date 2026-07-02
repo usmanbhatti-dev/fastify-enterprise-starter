@@ -4,7 +4,7 @@ import { UserRepository } from '../repositories/user.repository.js';
 import { RoleRepository } from '../../roles/repositories/role.repository.js';
 import { NotFoundError, ForbiddenError, ValidationError } from '../../../exceptions/index.js';
 import type { StorageProvider } from '../../../storage/storage.interface.js';
-import type { QueueService } from '../../../queue/queue.service.js';
+import type { IQueueService } from '../../../interfaces/index.js';
 import {
   parsePagination,
   buildPaginationMeta,
@@ -19,7 +19,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly roleRepository: RoleRepository,
     private readonly storage: StorageProvider,
-    private readonly queueService: QueueService,
+    private readonly queueService: IQueueService,
   ) {}
 
   async getById(id: string) {

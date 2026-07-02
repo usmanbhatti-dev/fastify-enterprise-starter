@@ -85,15 +85,30 @@ function validateProductionSecrets(config: EnvConfig): void {
     return;
   }
 
-  const insecurePatterns = ['change-me', 'test-access', 'test-refresh'];
+  const insecurePatterns = [
+    'change-me',
+    'test-access',
+    'test-refresh',
+    'replace_with',
+    'your-secret',
+    'min-32-chars',
+    'example.com',
+  ];
   const secrets = [config.JWT_ACCESS_SECRET, config.JWT_REFRESH_SECRET];
 
   for (const secret of secrets) {
-    if (insecurePatterns.some((pattern) => secret.toLowerCase().includes(pattern))) {
+    const normalized = secret.toLowerCase();
+    if (insecurePatterns.some((pattern) => normalized.includes(pattern))) {
       throw new Error(
         'Production startup blocked: set strong JWT_ACCESS_SECRET and JWT_REFRESH_SECRET (32+ chars).',
       );
     }
+  }
+
+  if (!config.SMTP_USER || !config.SMTP_PASSWORD) {
+    throw new Error(
+      'Production startup blocked: SMTP_USER and SMTP_PASSWORD are required for transactional email.',
+    );
   }
 }
 

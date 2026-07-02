@@ -5,6 +5,7 @@ import { disconnectRedis } from '../../src/cache/index.js';
 export async function teardownTestApp(app?: FastifyInstance): Promise<void> {
   if (app) {
     await app.close();
+    return;
   }
 
   await disconnectDatabase().catch(() => undefined);

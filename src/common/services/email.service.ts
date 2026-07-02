@@ -41,8 +41,12 @@ export class EmailService {
         console.warn(
           `[EmailService] SMTP not configured. Would send to ${input.to}: ${input.subject}`,
         );
+        return;
       }
-      return;
+
+      throw new Error(
+        'SMTP is not configured. Set SMTP_USER and SMTP_PASSWORD to send transactional email.',
+      );
     }
 
     await transporter.sendMail({

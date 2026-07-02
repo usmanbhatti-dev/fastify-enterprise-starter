@@ -2,6 +2,8 @@ import { prisma } from '../database/index.js';
 import { getRedisClient } from '../cache/index.js';
 import { CacheService } from '../cache/cache.service.js';
 import { QueueService } from '../queue/queue.service.js';
+import { NoOpQueueService } from '../queue/noop.queue.service.js';
+import type { IQueueService } from '../interfaces/index.js';
 import { HashService } from '../common/services/hash.service.js';
 import { TokenService } from '../common/services/token.service.js';
 import { OtpService } from '../common/services/otp.service.js';
@@ -28,6 +30,7 @@ import { RoleController } from '../modules/roles/controllers/role.controller.js'
 import { PermissionController } from '../modules/permissions/controllers/permission.controller.js';
 
 import { createAuthMiddleware, requirePermissions } from '../middleware/auth.middleware.js';
+import { isTest } from '../config/env.js';
 
 export interface AppContainer {
   dependencies: AppDependencies;
@@ -57,7 +60,7 @@ export interface AppContainer {
     authenticate: ReturnType<typeof createAuthMiddleware>;
     requirePermission: typeof requirePermissions;
   };
-  queueService: QueueService;
+  queueService: IQueueService;
 }
 
 export function createContainer(): AppContainer {
@@ -66,7 +69,7 @@ export function createContainer(): AppContainer {
   const hashService = new HashService();
   const tokenService = new TokenService();
   const otpService = new OtpService(redis);
-  const queueService = new QueueService(redis);
+  const queueService: IQueueService = isTest ? new NoOpQueueService() : new QueueService(redis);
   const emailService = new EmailService();
   const storage = createStorageProvider();
 

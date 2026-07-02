@@ -9,6 +9,7 @@ import { globalErrorHandler } from './middleware/error.middleware.js';
 import { createContainer } from './common/container.js';
 import { registerRoutes } from './routes/index.js';
 import { registerJobProcessors } from './jobs/index.js';
+import { QueueService } from './queue/queue.service.js';
 import { connectDatabase } from './database/index.js';
 import { connectRedis } from './cache/index.js';
 
@@ -43,6 +44,19 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   app.setErrorHandler(globalErrorHandler);
 
+  app.setNotFoundHandler((request, reply) => {
+    void reply.status(404).send({
+      success: false,
+      message: 'Route not found',
+      data: null,
+      meta: {
+        code: 'NOT_FOUND',
+        requestId: request.requestId,
+        correlationId: request.correlationId,
+      },
+    });
+  });
+
   await app.register(loggingPlugin);
   await app.register(databasePlugin);
   await app.register(dependenciesPluginWrapped, { dependencies: container.dependencies });
@@ -58,7 +72,7 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   await registerRoutes(app, container);
 
-  if (!isTest) {
+  if (!isTest && container.queueService instanceof QueueService) {
     registerJobProcessors(container.queueService, container.emailService, app.log);
   }
 

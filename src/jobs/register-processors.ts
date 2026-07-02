@@ -7,17 +7,20 @@ export function registerJobProcessors(
   queueService: QueueService,
   emailService: EmailService,
   logger: {
-    info: (msg: string, data?: object) => void;
-    error: (msg: string, data?: object) => void;
+    info: (data: object, msg: string) => void;
+    error: (data: object, msg: string) => void;
   },
 ): void {
   queueService.registerWorker(QUEUE_NAMES.EMAIL, async (job: { data: Record<string, unknown> }) => {
     const data = job.data as unknown as EmailJobData;
-    logger.info('Processing email job', {
-      to: data.to,
-      subject: data.subject,
-      template: data.template,
-    });
+    logger.info(
+      {
+        to: data.to,
+        subject: data.subject,
+        template: data.template,
+      },
+      'Processing email job',
+    );
 
     let subject = data.subject;
     let html = `<p>${data.subject}</p>`;
@@ -48,28 +51,31 @@ export function registerJobProcessors(
     }
 
     await emailService.send({ to: data.to, subject, html, text });
-    logger.info('Email sent successfully', { to: data.to, subject });
+    logger.info({ to: data.to, subject }, 'Email sent successfully');
   });
 
   queueService.registerWorker(
     QUEUE_NAMES.NOTIFICATION,
     async (job: { data: Record<string, unknown> }) => {
       const data = job.data as unknown as NotificationJobData;
-      logger.info('Processing notification job', {
-        userId: data.userId,
-        channel: data.channel,
-        title: data.title,
-      });
+      logger.info(
+        {
+          userId: data.userId,
+          channel: data.channel,
+          title: data.title,
+        },
+        'Processing notification job',
+      );
 
       switch (data.channel) {
         case 'push':
-          logger.info('Push notification dispatched', { userId: data.userId });
+          logger.info({ userId: data.userId }, 'Push notification dispatched');
           break;
         case 'sms':
-          logger.info('SMS notification dispatched', { userId: data.userId });
+          logger.info({ userId: data.userId }, 'SMS notification dispatched');
           break;
         case 'in-app':
-          logger.info('In-app notification stored', { userId: data.userId });
+          logger.info({ userId: data.userId }, 'In-app notification stored');
           break;
       }
     },
@@ -79,20 +85,26 @@ export function registerJobProcessors(
     QUEUE_NAMES.IMAGE_PROCESSING,
     async (job: { data: Record<string, unknown> }) => {
       const data = job.data as unknown as ImageProcessingJobData;
-      logger.info('Processing image job', {
-        filePath: data.filePath,
-        operations: data.operations.length,
-        outputPath: data.outputPath,
-      });
+      logger.info(
+        {
+          filePath: data.filePath,
+          operations: data.operations.length,
+          outputPath: data.outputPath,
+        },
+        'Processing image job',
+      );
 
       for (const operation of data.operations) {
-        logger.info('Applying image operation', {
-          type: operation.type,
-          options: operation.options,
-        });
+        logger.info(
+          {
+            type: operation.type,
+            options: operation.options,
+          },
+          'Applying image operation',
+        );
       }
 
-      logger.info('Image processing completed', { outputPath: data.outputPath });
+      logger.info({ outputPath: data.outputPath }, 'Image processing completed');
     },
     2,
   );
