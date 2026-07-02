@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import Fastify from 'fastify';
 import type { FastifyInstance } from 'fastify';
 import { appConfig, logConfig } from './config/index.js';
-import { isProduction } from './config/env.js';
+import { isProduction, isTest } from './config/env.js';
 import { globalErrorHandler } from './middleware/error.middleware.js';
 import { createContainer } from './common/container.js';
 import { registerRoutes } from './routes/index.js';
@@ -58,7 +58,9 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   await registerRoutes(app, container);
 
-  registerJobProcessors(container.queueService, container.emailService, app.log);
+  if (!isTest) {
+    registerJobProcessors(container.queueService, container.emailService, app.log);
+  }
 
   app.decorate('container', container);
 

@@ -84,7 +84,7 @@ npm run docker:down
 
 ## Manual deployment (VPS)
 
-Best for: Ubuntu/Debian VPS with Node.js 22+.
+Best for: Ubuntu/Debian VPS with Node.js 24+.
 
 ```bash
 # On server

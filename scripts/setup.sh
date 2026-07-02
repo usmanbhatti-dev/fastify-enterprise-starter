@@ -3,6 +3,14 @@ set -euo pipefail
 
 echo "==> Enterprise Fastify Backend — First-time setup"
 
+REQUIRED_NODE_MAJOR=24
+NODE_MAJOR="$(node -p "process.versions.node.split('.')[0]")"
+if [ "$NODE_MAJOR" -lt "$REQUIRED_NODE_MAJOR" ]; then
+  echo "    Error: Node.js ${REQUIRED_NODE_MAJOR}+ is required (current: $(node -v))"
+  echo "    Run: nvm install && nvm use"
+  exit 1
+fi
+
 if [ ! -f .env ]; then
   cp .env.example .env
   echo "    Created .env from .env.example"

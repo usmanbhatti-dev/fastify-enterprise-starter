@@ -4,7 +4,7 @@
   "description": "Production-ready enterprise backend boilerplate with Fastify, Prisma, PostgreSQL, Redis, and BullMQ",
   "type": "module",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
@@ -78,7 +78,7 @@
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "^22.10.5",
+    "@types/node": "^24.0.0",
     "@types/nodemailer": "^6.4.17",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.19.1",

@@ -6,6 +6,9 @@ import { HTTP_STATUS } from '../constants/index.js';
 
 export function healthRoutes(app: FastifyInstance): void {
   app.get('/health', {
+    config: {
+      rateLimit: false,
+    },
     schema: {
       tags: ['Health'],
       summary: 'Liveness probe',
@@ -15,7 +18,15 @@ export function healthRoutes(app: FastifyInstance): void {
           properties: {
             success: { type: 'boolean' },
             message: { type: 'string' },
-            data: { type: 'object' },
+            data: {
+              type: 'object',
+              additionalProperties: true,
+              properties: {
+                status: { type: 'string' },
+                timestamp: { type: 'string' },
+                uptime: { type: 'number' },
+              },
+            },
           },
         },
       },
@@ -35,9 +46,22 @@ export function healthRoutes(app: FastifyInstance): void {
   });
 
   app.get('/ready', {
+    config: {
+      rateLimit: false,
+    },
     schema: {
       tags: ['Health'],
       summary: 'Readiness probe',
+      response: {
+        200: {
+          type: 'object',
+          additionalProperties: true,
+        },
+        503: {
+          type: 'object',
+          additionalProperties: true,
+        },
+      },
     },
     handler: async (_request, reply) => {
       const [dbHealthy, redisHealthy] = await Promise.all([

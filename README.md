@@ -1,11 +1,11 @@
 # Fastify Enterprise Starter
 
-[![Node.js](https://img.shields.io/badge/Node.js-22%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-24%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Fastify](https://img.shields.io/badge/Fastify-5-000000?logo=fastify&logoColor=white)](https://fastify.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Production-ready enterprise backend boilerplate built with **Node.js 22+**, **TypeScript**, **Fastify**, **PostgreSQL**, **Prisma**, **Redis**, and **BullMQ**.
+Production-ready enterprise backend boilerplate built with **Node.js 24+**, **TypeScript**, **Fastify**, **PostgreSQL**, **Prisma**, **Redis**, and **BullMQ**.
 
 Use it as the foundation for SaaS, fintech, e-commerce, ERP, CRM, AI products, and large-scale APIs.
 
@@ -53,7 +53,7 @@ Use it as the foundation for SaaS, fintech, e-commerce, ERP, CRM, AI products, a
 
 ### Prerequisites
 
-- **Node.js 22+**
+- **Node.js 24+** — run `nvm use` if you use nvm (see `.nvmrc`)
 - **Docker** (recommended for Postgres + Redis)
 
 ### One-command setup
@@ -381,7 +381,7 @@ npm run docker:dev
 docker exec enterprise-postgres-dev psql -U postgres -c \
   "CREATE DATABASE enterprise_db_test;"
 
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/enterprise_db_test?schema=public \
+DATABASE_URL=postgresql://postgres:postgres@localhost:5433/enterprise_db_test?schema=public \
   npx prisma migrate deploy
 
 npm test

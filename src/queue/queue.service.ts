@@ -136,12 +136,13 @@ export class QueueService implements IQueueService {
   }
 
   async close(): Promise<void> {
-    await Promise.all(this.workers.map((w) => w.close()));
-    await Promise.all([
+    await Promise.allSettled(this.workers.map((w) => w.close()));
+    await Promise.allSettled([
       this.emailQueue.close(),
       this.notificationQueue.close(),
       this.imageQueue.close(),
       this.deadLetterQueue.close(),
     ]);
+    this.workers = [];
   }
 }

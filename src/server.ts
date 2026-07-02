@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { initTelemetry, shutdownTelemetry } from './hooks/telemetry.hook.js';
 import { startApp, buildApp } from './app.js';
 import { disconnectDatabase } from './database/index.js';
