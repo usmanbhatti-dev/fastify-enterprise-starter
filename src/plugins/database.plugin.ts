@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin';
 import type { FastifyInstance } from 'fastify';
 import { prisma } from '../database/index.js';
-import { getRedisClient } from '../cache/index.js';
+import { getRedisClient, disconnectRedis } from '../cache/index.js';
 import type { AppDependencies } from '../interfaces/index.js';
 
 async function databasePlugin(fastify: FastifyInstance): Promise<void> {
@@ -25,7 +25,7 @@ export async function dependenciesPlugin(
 
   fastify.addHook('onClose', async () => {
     await dependencies.queue.close();
-    await dependencies.redis.quit();
+    await disconnectRedis();
   });
 }
 

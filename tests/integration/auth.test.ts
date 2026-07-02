@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import { buildApp } from '../../src/app.js';
-import { connectDatabase, disconnectDatabase, prisma } from '../../src/database/index.js';
-import { connectRedis, disconnectRedis } from '../../src/cache/index.js';
+import { connectDatabase, prisma } from '../../src/database/index.js';
+import { connectRedis } from '../../src/cache/index.js';
 import { appConfig } from '../../src/config/index.js';
+import { teardownTestApp } from '../helpers/teardown.js';
 
 describe('Auth Endpoints', () => {
   let app: FastifyInstance;
@@ -20,9 +21,7 @@ describe('Auth Endpoints', () => {
   });
 
   afterAll(async () => {
-    await app.close();
-    await disconnectDatabase();
-    await disconnectRedis();
+    await teardownTestApp(app);
   });
 
   it('POST /auth/register should create a new user without tokens', async () => {

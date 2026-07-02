@@ -28,7 +28,11 @@ export async function connectDatabase(): Promise<void> {
 }
 
 export async function disconnectDatabase(): Promise<void> {
-  await prisma.$disconnect();
+  try {
+    await prisma.$disconnect();
+  } catch {
+    // Prisma may already be disconnected by app shutdown hooks
+  }
 }
 
 export async function checkDatabaseHealth(): Promise<boolean> {

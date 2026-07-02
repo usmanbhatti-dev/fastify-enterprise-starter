@@ -1,8 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { FastifyInstance } from 'fastify';
-import { buildApp } from '../src/app.js';
-import { connectDatabase, disconnectDatabase } from '../src/database/index.js';
-import { connectRedis, disconnectRedis } from '../src/cache/index.js';
+import { buildApp } from '../../src/app.js';
+import { connectDatabase } from '../../src/database/index.js';
+import { connectRedis } from '../../src/cache/index.js';
+import { teardownTestApp } from '../helpers/teardown.js';
 
 describe('Health Endpoints', () => {
   let app: FastifyInstance;
@@ -15,9 +16,7 @@ describe('Health Endpoints', () => {
   });
 
   afterAll(async () => {
-    await app.close();
-    await disconnectDatabase();
-    await disconnectRedis();
+    await teardownTestApp(app);
   });
 
   it('GET /health should return 200', async () => {

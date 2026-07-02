@@ -40,9 +40,22 @@ export async function connectRedis(): Promise<void> {
 }
 
 export async function disconnectRedis(): Promise<void> {
-  if (redisInstance) {
-    await redisInstance.quit();
-    redisInstance = null;
+  if (!redisInstance) {
+    return;
+  }
+
+  const client = redisInstance;
+  redisInstance = null;
+
+  if (client.status === 'end' || client.status === 'close') {
+    return;
+  }
+
+  try {
+    await client.quit();
+  } catch {
+    // Connection may already be closed by app shutdown hooks
+    client.disconnect();
   }
 }
 
