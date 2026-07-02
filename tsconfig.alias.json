@@ -1,0 +1,20 @@
+{
+  "resolveFullPaths": true,
+  "replacers": {
+    "@/*": "dist/*",
+    "@config/*": "dist/config/*",
+    "@common/*": "dist/common/*",
+    "@database/*": "dist/database/*",
+    "@plugins/*": "dist/plugins/*",
+    "@middleware/*": "dist/middleware/*",
+    "@modules/*": "dist/modules/*",
+    "@jobs/*": "dist/jobs/*",
+    "@cache/*": "dist/cache/*",
+    "@queue/*": "dist/queue/*",
+    "@utils/*": "dist/utils/*",
+    "@constants/*": "dist/constants/*",
+    "@types/*": "dist/types/*",
+    "@interfaces/*": "dist/interfaces/*",
+    "@exceptions/*": "dist/exceptions/*"
+  }
+}
